@@ -404,14 +404,11 @@ public class HiC {
 
     public Matrix getMatrix() {
         if (dataset == null) {
-            System.err.println("Dataset is null");
-            return null;
+            throw new NullPointerException("Dataset is null");
         } else if (xContext == null) {
-            System.err.println("xContext is null");
-            return null;
+            throw new NullPointerException("xContext is null");
         } else if (yContext == null) {
-            System.err.println("yContext is null");
-            return null;
+            throw new Error("yContext is null");
         }
         return dataset.getMatrix(xContext.getChromosome(), yContext.getChromosome());
 
@@ -924,8 +921,8 @@ public class HiC {
         String xChr = xContext.getChromosome().getName();
         String yChr = yContext.getChromosome().getName();
 
-        if (!xChr.toLowerCase().equals("assembly") && !(xChr.toLowerCase().contains("chr"))) xChr = "chr" + xChr;
-        if (!yChr.toLowerCase().equals("assembly") && !(yChr.toLowerCase().contains("chr"))) yChr = "chr" + yChr;
+        if (!xChr.equalsIgnoreCase("assembly") && !(xChr.toLowerCase().contains("chr"))) xChr = "chr" + xChr;
+        if (!yChr.equalsIgnoreCase("assembly") && !(yChr.toLowerCase().contains("chr"))) yChr = "chr" + yChr;
 
         return "setlocation " + xChr + " " + yChr + " " + currentZoom.getUnit().toString() + " " + currentZoom.getBinSize() + " " +
                 xContext.getBinOrigin() + " " + yContext.getBinOrigin() + " " + getScaleFactor();
@@ -936,8 +933,8 @@ public class HiC {
         String xChr = xContext.getChromosome().getName();
         String yChr = yContext.getChromosome().getName();
 
-        if (!xChr.toLowerCase().equals("assembly") && !(xChr.toLowerCase().contains("chr"))) xChr = "chr" + xChr;
-        if (!yChr.toLowerCase().equals("assembly") && !(yChr.toLowerCase().contains("chr"))) yChr = "chr" + yChr;
+        if (!xChr.equalsIgnoreCase("assembly") && !(xChr.toLowerCase().contains("chr"))) xChr = "chr" + xChr;
+        if (!yChr.equalsIgnoreCase("assembly") && !(yChr.toLowerCase().contains("chr"))) yChr = "chr" + yChr;
 
         return xChr + "@" + (long) (xContext.getBinOrigin() * currentZoom.getBinSize()) + "_" +
                 yChr + "@" + (long) (yContext.getBinOrigin() * currentZoom.getBinSize());

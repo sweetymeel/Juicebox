@@ -24,7 +24,19 @@
 
 package juicebox.tools.clt;
 
-import juicebox.tools.HiCTools;
+import juicebox.HiC;
+import juicebox.data.ChromosomeHandler;
+import juicebox.data.Dataset;
+import juicebox.data.HiCFileTools;
+import juicebox.data.MatrixZoomData;
+import juicebox.data.basics.Chromosome;
+import juicebox.tools.utils.common.MatrixTools;
+import juicebox.windowui.HiCZoom;
+import juicebox.windowui.NormalizationHandler;
+import org.apache.commons.math.linear.RealMatrix;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,8 +47,31 @@ class AggregateProcessing {
 
 
     public static void main(String[] argv) throws Exception {
-    
-    
+
+        List<String> files = new ArrayList<>();
+        files.add("/Users/mshamim/Desktop/hicfiles/GM12878_intact_18.7B_8.15.20_30.hic");
+
+        Dataset ds = HiCFileTools.extractDatasetForCLT(files, true);
+        ChromosomeHandler handler = ds.getChromosomeHandler();
+        Chromosome chrom1 = handler.getChromosomeFromName("10");
+        HiCZoom zoom = new HiCZoom(HiC.Unit.BP, 5000);
+        MatrixZoomData zd = HiCFileTools.getMatrixZoomData(ds, chrom1, chrom1, zoom);
+
+
+        //int pos1 = 64000000/5000;
+        //int pos2 = 69000000/5000 + 1;
+
+        int pos1 = 70000000 / 5000;
+        int pos2 = 80000000 / 5000 + 1;
+
+
+        int width = 2000;
+        RealMatrix matrix = HiCFileTools.extractLocalBoundedRegion(zd, pos1, pos2, pos1, pos2, width, width, NormalizationHandler.SCALE, true);
+        String outloc = "/Users/mshamim/Desktop/stripes/chr1_intact_70M_80M.npy";
+        MatrixTools.saveMatrixTextNumpy(outloc, matrix.getData());
+
+
+/*
         String[] strings = new String[]{"pre", //"-c", "1", //"--verbose",
                 "/Users/muhammad/JuiceboxMain/data/test.txt.gz",
                 "/Users/muhammad/Dropbox (Lab at Large)/testV9/test_new9-15.hic",

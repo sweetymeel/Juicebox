@@ -332,10 +332,10 @@ public class HiCFileTools {
                             }
                         }
     
-                        if (fillUnderDiagonal) {
+                        if (fillUnderDiagonal && rec.getBinY() != rec.getBinX()) {
                             relativeX = (int) (rec.getBinY() - binXStart);
                             relativeY = (int) (rec.getBinX() - binYStart);
-        
+
                             if (relativeX >= 0 && relativeX < numRows) {
                                 if (relativeY >= 0 && relativeY < numCols) {
                                     data.addToEntry(relativeX, relativeY, rec.getCounts());

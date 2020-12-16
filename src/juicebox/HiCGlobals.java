@@ -78,7 +78,7 @@ public class HiCGlobals {
     public static boolean useCache = true;
     public static boolean guiIsCurrentlyActive = false;
     public static boolean allowDynamicBlockIndex = true;
-    public static boolean printVerboseComments = false;
+    public static boolean printVerboseComments = true;
     public static boolean slideshowEnabled = false;
     public static boolean splitModeEnabled = false;
     public static boolean translationInProgress = false;

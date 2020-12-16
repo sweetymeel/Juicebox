@@ -541,7 +541,7 @@ public class DatasetReaderV2 extends AbstractDatasetReader {
                 int binSize = dis.readInt();
                 String key = unitString + "_" + binSize + "_" + typeString;
                 //System.out.println(key);
-    
+
                 long nValues;
                 if (version > 8) {
                     nValues = dis.readLong();
@@ -549,30 +549,44 @@ public class DatasetReaderV2 extends AbstractDatasetReader {
                 } else {
                     nValues = dis.readInt();
                 }
-                ListOfDoubleArrays values = new ListOfDoubleArrays(nValues);
-                for (long j = 0; j < nValues; j++) {
-                    if (version > 8) {
-                        values.set(j, dis.readFloat());
-                    } else {
-                        values.set(j, dis.readDouble());
+                if (binSize <= 100 && version > 8) {
+                    System.out.println("Skipping " + binSize + " - " + nValues);
+                    for (long j = 0; j < nValues; j++) {
+                        dis.readFloat();
                     }
-                }
-                int nNormalizationFactors = dis.readInt();
-                Map<Integer, Double> normFactors = new LinkedHashMap<>();
-                for (int j = 0; j < nNormalizationFactors; j++) {
-                    Integer chrIdx = dis.readInt();
-                    Double normFactor;
-                    if (version > 8) {
-                        normFactor = (double) dis.readFloat();
-                    } else {
-                        normFactor = dis.readDouble();
+                    int nNormalizationFactors = dis.readInt();
+                    for (int j = 0; j < nNormalizationFactors; j++) {
+                        dis.readInt();
+                        dis.readFloat();
                     }
-                    normFactors.put(chrIdx, normFactor);
-                }
+                } else {
+                    //System.out.println(binSize + " - " + nValues);
+                    ListOfDoubleArrays values = new ListOfDoubleArrays(nValues);
 
-                NormalizationType type = dataset.getNormalizationHandler().getNormTypeFromString(typeString);
-                ExpectedValueFunction df = new ExpectedValueFunctionImpl(type, unit, binSize, values, normFactors);
-                expectedValuesMap.put(key, df);
+                    for (long j = 0; j < nValues; j++) {
+                        if (version > 8) {
+                            values.set(j, dis.readFloat());
+                        } else {
+                            values.set(j, dis.readDouble());
+                        }
+                    }
+                    int nNormalizationFactors = dis.readInt();
+                    Map<Integer, Double> normFactors = new LinkedHashMap<>();
+                    for (int j = 0; j < nNormalizationFactors; j++) {
+                        Integer chrIdx = dis.readInt();
+                        Double normFactor;
+                        if (version > 8) {
+                            normFactor = (double) dis.readFloat();
+                        } else {
+                            normFactor = dis.readDouble();
+                        }
+                        normFactors.put(chrIdx, normFactor);
+                    }
+
+                    NormalizationType type = dataset.getNormalizationHandler().getNormTypeFromString(typeString);
+                    ExpectedValueFunction df = new ExpectedValueFunctionImpl(type, unit, binSize, values, normFactors);
+                    expectedValuesMap.put(key, df);
+                }
             }
 
             // Normalization vectors (indexed)
