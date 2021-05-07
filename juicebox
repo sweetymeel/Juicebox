@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+java -jar /opt/Juicebox/out/artifacts/Juicebox_jar/Juicebox.jar "$@
