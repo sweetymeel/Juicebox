@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-java -jar /opt/Juicebox/out/artifacts/Juicebox_jar/Juicebox.jar "$@
+# Make sure to run ant before copying this file to $PATH
+java -jar /opt/Juicebox/out/artifacts/Juicebox_jar/Juicebox.jar "$@"
